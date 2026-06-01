@@ -51,6 +51,8 @@ Prompt structure:
 
 For image-to-image, state what should change and what must remain unchanged.
 
+For non-English user prompts, translate to English before sending the request. Preserve visual specifics and constraints.
+
 ## Video
 
 Create task endpoint: `POST /v1/videos`
@@ -60,6 +62,8 @@ Retrieve task endpoint: `GET /v1/videos/{task_id}`
 Model: `agnes-video-v2.0`
 
 The video API is asynchronous. Create a task, then retrieve or poll by task id.
+
+Use English prompts for video generation whenever possible. If the user prompt is not English, translate it to English first, preserving subject, action, scene, camera movement, lighting, style, and constraints.
 
 Required:
 

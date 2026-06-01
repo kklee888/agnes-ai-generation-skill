@@ -75,6 +75,7 @@ python scripts/agnes_api.py smoke-test --poll-video
 - Prefer `agnes-2.0-flash` for text chat/completions.
 - Prefer `agnes-image-2.1-flash` for text-to-image, image-to-image, and high-information-density image generation. High-density generation is prompt-driven; include subject hierarchy, environment, secondary details, lighting, composition, and quality requirements.
 - Prefer `agnes-video-v2.0` for text-to-video, image-to-video, multi-image video, keyframe animation, prompt-based motion and scene control, cinematic output, asynchronous task creation, polling-based result retrieval, and seed-based reproducibility.
+- For image and video generation, convert any non-English user prompt to a fluent English generation prompt before calling the image/video API. English prompts are more stable for Agnes video generation. Preserve concrete visual details, style, lighting, composition, motion, camera instructions, and constraints during translation.
 - For videos, remember the API is asynchronous: create a task first, then poll or retrieve by task id.
 - Keep video smoke tests small but valid: `num_frames` must be `8n + 1` and `<= 441`; `81` or `121` are good short-test values.
 - Warn the user before costly or long-running live video generation unless they explicitly asked to test or generate video.

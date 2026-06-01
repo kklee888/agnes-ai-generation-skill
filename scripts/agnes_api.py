@@ -91,6 +91,43 @@ def print_json(data: Any) -> None:
     print(json.dumps(data, ensure_ascii=False, indent=2))
 
 
+def needs_english_translation(prompt: str) -> bool:
+    return any(ord(ch) > 127 for ch in prompt)
+
+
+def translate_prompt_to_english(prompt: str) -> str:
+    payload = {
+        "model": TEXT_MODEL,
+        "messages": [
+            {
+                "role": "system",
+                "content": (
+                    "Translate the user's image/video generation prompt into fluent English. "
+                    "Preserve all concrete visual details, style words, camera motion, lighting, "
+                    "composition constraints, and negative instructions. Return only the English prompt."
+                ),
+            },
+            {"role": "user", "content": prompt},
+        ],
+        "temperature": 0,
+        "max_tokens": 800,
+    }
+    data = request_json("POST", "/v1/chat/completions", payload)
+    try:
+        translated = data["choices"][0]["message"]["content"].strip()
+    except (KeyError, IndexError, TypeError) as exc:
+        raise SystemExit(f"Prompt translation failed: {json.dumps(data, ensure_ascii=False)}") from exc
+    if not translated:
+        raise SystemExit("Prompt translation failed: empty translated prompt")
+    return translated
+
+
+def prepare_generation_prompt(prompt: str, translate: bool = True) -> str:
+    if translate and needs_english_translation(prompt):
+        return translate_prompt_to_english(prompt)
+    return prompt
+
+
 def cmd_text(args: argparse.Namespace) -> None:
     messages = []
     if args.system:
@@ -117,9 +154,10 @@ def cmd_text(args: argparse.Namespace) -> None:
 
 
 def cmd_image(args: argparse.Namespace) -> None:
+    prompt = prepare_generation_prompt(args.prompt, not args.no_translate_prompt)
     payload: dict[str, Any] = {
         "model": IMAGE_MODEL,
-        "prompt": args.prompt,
+        "prompt": prompt,
     }
     if args.size:
         payload["size"] = args.size
@@ -132,9 +170,10 @@ def cmd_image(args: argparse.Namespace) -> None:
 
 
 def video_payload(args: argparse.Namespace) -> dict[str, Any]:
+    prompt = prepare_generation_prompt(args.prompt, not args.no_translate_prompt)
     payload: dict[str, Any] = {
         "model": VIDEO_MODEL,
-        "prompt": args.prompt,
+        "prompt": prompt,
     }
     for name in (
         "height",
@@ -402,6 +441,11 @@ def build_parser() -> argparse.ArgumentParser:
     image.add_argument("--prompt", required=True)
     image.add_argument("--size", default="1024x768")
     image.add_argument("--image", action="append", help="Input image URL. Repeat for multiple images.")
+    image.add_argument(
+        "--no-translate-prompt",
+        action="store_true",
+        help="Do not translate non-English prompts before sending to the image API.",
+    )
     image.set_defaults(func=cmd_image)
 
     video = sub.add_parser("video", help="Create a video task.")
@@ -415,6 +459,11 @@ def build_parser() -> argparse.ArgumentParser:
     video.add_argument("--num-inference-steps", type=int)
     video.add_argument("--seed", type=int)
     video.add_argument("--negative-prompt")
+    video.add_argument(
+        "--no-translate-prompt",
+        action="store_true",
+        help="Do not translate non-English prompts before sending to the video API.",
+    )
     video.add_argument("--poll", action="store_true")
     video.add_argument("--timeout", type=int, default=900)
     video.add_argument("--interval", type=int, default=10)
