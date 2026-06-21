@@ -142,6 +142,8 @@ python scripts/agnes_api.py video-get video_123456
 
 默认输出会整理出常用字段，例如 `content`、`urls`、`translated_prompt`、`next_steps`，同时保留 `raw` 原始响应，方便 AI 和人工继续处理。
 
+默认情况下，生成图片或视频后直接返回 `urls` 即可；除非用户明确要求下载、保存或检查本地文件，否则不需要把媒体下载到本地。
+
 流式文本也会聚合输出 `content`，同时保留事件数量、是否完成和原始响应前缀，便于快速判断流式接口是否正常。
 
 视频创建接口如果返回 `video_id`，脚本会优先使用新版 `video_id` 查询接口：`/agnesapi?video_id=...`。如果旧响应没有 `video_id`，脚本才回退到兼容的 `task_id` 查询接口。视频完成后，脚本会从 `video_url`、`url` 或 Agnes 实测返回中的 `remixed_from_video_id` 提取可直接访问的 mp4 链接，并放入 `urls`。

@@ -106,7 +106,7 @@ python scripts/agnes_api.py smoke-test --video-case text-to-video
 
 ## Output Handling
 
-- Return or save generated URLs from the JSON response.
+- Return generated image/video URLs directly by default. Do not download, save, open, or inspect generated media unless the user explicitly asks for a local file or visual inspection.
 - For image responses, expect URL-style results when `extra_body.response_format` is `url`.
 - For video responses, extract URLs from `video_url`, `url`, or `remixed_from_video_id` when `status` is `completed`.
 - For video retrieval, prefer `GET /agnesapi?video_id=...&model_name=agnes-video-v2.0`; legacy `GET /v1/videos/{task_id}` remains a fallback.
