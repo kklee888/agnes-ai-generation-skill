@@ -6,6 +6,10 @@ Agnes AI Generation Skill is a standard Agent Skills package for calling Agnes A
 
 Official platform: [https://platform.agnes-ai.com/](https://platform.agnes-ai.com/)
 
+Latest release: [v0.1.0 - Agnes Generation Skill](https://github.com/Yacey/agnes-ai-generation-skill/releases/tag/v0.1.0)
+
+This release prioritizes the newer Agnes Video V2.0 `video_id` result lookup, returns generated media `urls` by default without downloading files, and documents that Agnes Responses API multi-turn function calling is not suitable for agent automatic tool loops yet. See [Releases](https://github.com/Yacey/agnes-ai-generation-skill/releases) for the full notes.
+
 ## Features
 
 - Text generation with `agnes-2.0-flash`

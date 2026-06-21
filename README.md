@@ -6,6 +6,10 @@
 
 官网与 API 平台：[https://platform.agnes-ai.com/](https://platform.agnes-ai.com/)
 
+最新版本：[v0.1.0 - Agnes Generation Skill](https://github.com/Yacey/agnes-ai-generation-skill/releases/tag/v0.1.0)
+
+本版本重点修复：Agnes Video V2.0 优先使用新版 `video_id` 查询接口；生成图片/视频后默认只返回 `urls`，不主动下载媒体；明确 Agnes Responses API 多轮函数调用暂不适合作为 agent 自动工具循环。完整说明见 [Releases](https://github.com/Yacey/agnes-ai-generation-skill/releases)。
+
 ## 功能
 
 - 文本生成：`agnes-2.0-flash`
