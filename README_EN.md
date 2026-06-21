@@ -138,6 +138,8 @@ Streaming text output also includes aggregated `content`, event count, completio
 
 When the create response includes `video_id`, the script prefers the newer result endpoint: `/agnesapi?video_id=...`. It falls back to the legacy `task_id` endpoint only when `video_id` is absent. For completed video tasks, the script extracts direct mp4 URLs from `video_url`, `url`, or the live-response field `remixed_from_video_id`, then places them in `urls`.
 
+Note: Agnes Responses API multi-turn function calling is currently not suitable as the automatic tool-loop model for agents such as Codex or Claude Code. This skill's script uses the chat completions path; tool calling should be treated as request-shape compatibility rather than stable multi-turn tool execution.
+
 Add `--raw` to print only the original Agnes response:
 
 ```powershell

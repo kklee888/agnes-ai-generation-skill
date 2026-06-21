@@ -148,6 +148,8 @@ python scripts/agnes_api.py video-get video_123456
 
 视频创建接口如果返回 `video_id`，脚本会优先使用新版 `video_id` 查询接口：`/agnesapi?video_id=...`。如果旧响应没有 `video_id`，脚本才回退到兼容的 `task_id` 查询接口。视频完成后，脚本会从 `video_url`、`url` 或 Agnes 实测返回中的 `remixed_from_video_id` 提取可直接访问的 mp4 链接，并放入 `urls`。
 
+注意：Agnes Responses API 的多轮函数调用目前不适合作为 Codex / Claude Code 这类 agent 的自动工具循环模型。本 skill 的脚本使用 chat completions 路径；工具调用只应视为请求结构兼容能力，而不是稳定的多轮工具执行能力。
+
 若只想看 Agnes 原始响应，可以加：
 
 ```powershell
