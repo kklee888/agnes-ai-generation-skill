@@ -63,7 +63,7 @@ python scripts/agnes_api.py video --prompt "Create a smooth cinematic transition
 Retrieve a video task:
 
 ```bash
-python scripts/agnes_api.py video-get task_123456
+python scripts/agnes_api.py video-get video_123456
 ```
 
 Light live smoke test:
@@ -90,7 +90,7 @@ python scripts/agnes_api.py smoke-test --video-case text-to-video
 - Prefer `agnes-image-2.1-flash` for text-to-image, image-to-image, and high-information-density image generation. High-density generation is prompt-driven; include subject hierarchy, environment, secondary details, lighting, composition, and quality requirements.
 - Prefer `agnes-video-v2.0` for text-to-video, image-to-video, multi-image video, keyframe animation, prompt-based motion and scene control, cinematic output, asynchronous task creation, polling-based result retrieval, and seed-based reproducibility.
 - For image and video generation, convert any non-English user prompt to a fluent English generation prompt before calling the image/video API. English prompts are more stable for Agnes video generation. Preserve concrete visual details, style, lighting, composition, motion, camera instructions, and constraints during translation.
-- For videos, remember the API is asynchronous: create a task first, then poll or retrieve by task id.
+- For videos, remember the API is asynchronous: create a task first, then poll or retrieve by `video_id` when the create response includes it. The script falls back to legacy `task_id` lookup only when `video_id` is absent.
 - The script validates image sizes, video frame counts, frame rates, and dimensions before sending requests. `num_frames` must be `8n + 1` and `<= 441`; `81` or `121` are good short values.
 - The video command defaults to `num_frames=121` and `frame_rate=24` for more stable generation. Video smoke tests default to `num_frames=81` and `frame_rate=24`.
 - Warn the user before costly or long-running live video generation unless they explicitly asked to test or generate video.
@@ -109,4 +109,5 @@ python scripts/agnes_api.py smoke-test --video-case text-to-video
 - Return or save generated URLs from the JSON response.
 - For image responses, expect URL-style results when `extra_body.response_format` is `url`.
 - For video responses, extract URLs from `video_url`, `url`, or `remixed_from_video_id` when `status` is `completed`.
+- For video retrieval, prefer `GET /agnesapi?video_id=...&model_name=agnes-video-v2.0`; legacy `GET /v1/videos/{task_id}` remains a fallback.
 - If a request fails, report HTTP status and provider error body without exposing the API key.

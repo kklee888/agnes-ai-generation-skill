@@ -127,14 +127,14 @@ python scripts/agnes_api.py video --prompt "Create a smooth cinematic transition
 Retrieve a video task:
 
 ```powershell
-python scripts/agnes_api.py video-get task_123456
+python scripts/agnes_api.py video-get video_123456
 ```
 
 By default, command output is normalized with common fields such as `content`, `urls`, `translated_prompt`, and `next_steps`, while preserving the provider response under `raw`.
 
 Streaming text output also includes aggregated `content`, event count, completion status, and a short raw prefix so the result is easier to inspect.
 
-For completed video tasks, the script extracts direct mp4 URLs from `video_url`, `url`, or the live-response field `remixed_from_video_id`, then places them in `urls`.
+When the create response includes `video_id`, the script prefers the newer result endpoint: `/agnesapi?video_id=...`. It falls back to the legacy `task_id` endpoint only when `video_id` is absent. For completed video tasks, the script extracts direct mp4 URLs from `video_url`, `url`, or the live-response field `remixed_from_video_id`, then places them in `urls`.
 
 Add `--raw` to print only the original Agnes response:
 
